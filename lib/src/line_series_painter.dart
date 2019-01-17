@@ -13,7 +13,8 @@ class LineSeriesPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    var minTimeInterval = chartInfo.timeAxisRange / size.width * _minIntervalPixel;
+    var minTimeInterval =
+        chartInfo.timeAxisRange / size.width * _minIntervalPixel;
     var beginTime = currentTime - chartInfo.timeAxisRange;
     var yRange = chartInfo.maxY - chartInfo.minY;
     for (var i = 0; i < dataPointBuffer.length; i++) {
@@ -22,17 +23,18 @@ class LineSeriesPainter extends CustomPainter {
       var paint = Paint()
         ..color = chartInfo.seriesInfos[i].color
         ..strokeWidth = 2;
+      bool paintFromBeginning = beginTime < 0;
       double previousTime = -1000000;
       for (var dataPoint in dataPointBuffer[i]) {
         if (dataPoint.time >= beginTime && dataPoint.time <= currentTime) {
           if (dataPoint.time - previousTime >= minTimeInterval) {
             previousTime = dataPoint.time;
 
-            var offsetY =
+            var offsetY = size.height -
                 ((dataPoint.value - chartInfo.minY) / yRange * size.height)
                     .clamp(0.0, size.height);
 
-            var offset = beginTime < 0
+            var offset = paintFromBeginning
                 ? Offset(dataPoint.time / chartInfo.timeAxisRange * size.width,
                     offsetY)
                 : Offset(
