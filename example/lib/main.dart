@@ -56,13 +56,13 @@ class _MyHomePageState extends State<MyHomePage> {
               style: Theme.of(context).textTheme.display1,
             ),
             Card(
-              margin: const EdgeInsets.all(24.0),              
+              margin: const EdgeInsets.all(24.0),
               child: Container(
                 padding: const EdgeInsets.all(8.0),
                 child: RealtimeChart(
-                  height: 200,
                   chartInfo: Data.instance.chartInfo,
                   chartDataStream: Data.instance.chartDataStream,
+                  chartArarHeight: 200,
                 ),
               ),
             ),
@@ -117,13 +117,13 @@ class Data {
     _controller.add(ChartData(currentTime: time, points: points));
   }
 
-  void startTimer(int count){
-    if(count.isOdd){
-      _time = Timer.periodic(const Duration(milliseconds: 20), (t){
+  void startTimer(int count) {
+    if (count.isOdd) {
+      _time = Timer.periodic(const Duration(milliseconds: 20), (t) {
         double time = t.tick / 50.0;
         addValue(time);
       });
-    }else{
+    } else {
       _time?.cancel();
     }
   }
