@@ -8,13 +8,10 @@ class LineSeriesPainter extends CustomPainter {
   final double currentTime;
   final ChartInfo chartInfo;
   final List<Queue<DataPoint>> dataPointBuffer;
-  static const double _minIntervalPixel = 0.25;
   LineSeriesPainter({this.currentTime, this.chartInfo, this.dataPointBuffer});
 
   @override
   void paint(Canvas canvas, Size size) {
-    var minTimeInterval =
-        chartInfo.timeAxisRange / size.width * _minIntervalPixel;
     var beginTime = currentTime - chartInfo.timeAxisRange;
     var yRange = chartInfo.maxY - chartInfo.minY;
     for (var i = 0; i < dataPointBuffer.length; i++) {
@@ -27,7 +24,7 @@ class LineSeriesPainter extends CustomPainter {
       double previousTime = -1000000;
       for (var dataPoint in dataPointBuffer[i]) {
         if (dataPoint.time >= beginTime && dataPoint.time <= currentTime) {
-          if (dataPoint.time - previousTime >= minTimeInterval) {
+          if (dataPoint.time > previousTime) {
             previousTime = dataPoint.time;
 
             var offsetY = size.height -
