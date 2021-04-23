@@ -73,13 +73,17 @@ class _ChartAreaState extends State<ChartArea> {
         }
       }
     }
-    print('auto default y $minY $maxY');
+    
     if (minY >= maxY) {
       minY = widget.chartInfo.minY;
       maxY = widget.chartInfo.maxY;
     }
+    var offset = (maxY - minY) / 10.0;
+    minY -= offset;
+    maxY += offset;
     widget.chartInfo.curMinY = minY;
     widget.chartInfo.curMaxY = maxY;
+    print('auto default y $minY $maxY');
   }
 
   @override
