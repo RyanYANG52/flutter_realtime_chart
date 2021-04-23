@@ -13,7 +13,7 @@ class LineSeriesPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     var beginTime = currentTime - chartInfo.timeAxisRange;
-    var yRange = chartInfo.maxY - chartInfo.minY;
+    var yRange = chartInfo.curMaxY - chartInfo.curMinY;
     for (var i = 0; i < dataPointBuffer.length; i++) {
       if (dataPointBuffer[i].isEmpty) continue;
       List<Offset> points = [];
@@ -28,7 +28,7 @@ class LineSeriesPainter extends CustomPainter {
             previousTime = dataPoint.time;
 
             var offsetY = size.height -
-                ((dataPoint.value - chartInfo.minY) / yRange * size.height)
+                ((dataPoint.value - chartInfo.curMinY) / yRange * size.height)
                     .clamp(0.0, size.height);
 
             var offset = paintFromBeginning

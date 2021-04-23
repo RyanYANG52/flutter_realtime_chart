@@ -27,6 +27,8 @@ class ChartInfo {
   final bool isLegendVisible;
   final LegendBoxPosition legendBoxPosition;
   final LegendBoxAlignment legendBoxAlignment;
+  double curMinY;
+  double curMaxY;
 
   ChartInfo({
     @required this.timeAxisRange,
@@ -36,7 +38,10 @@ class ChartInfo {
     this.isLegendVisible = true,
     this.legendBoxPosition = LegendBoxPosition.bottom,
     this.legendBoxAlignment = LegendBoxAlignment.start,
-  });
+  }) {
+    this.curMaxY = maxY;
+    this.curMinY = minY;
+  }
 }
 
 enum LegendBoxPosition {

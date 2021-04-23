@@ -54,29 +54,63 @@ class _ChartAreaState extends State<ChartArea> {
     }
   }
 
+  void _restoreDefaultYAxis() {
+    widget.chartInfo.curMinY = widget.chartInfo.minY;
+    widget.chartInfo.curMaxY = widget.chartInfo.maxY;
+    print('restore default y ${widget.chartInfo.minY} ${widget.chartInfo.maxY}');
+  }
+
+  void _autoYAxis() {
+    var minY = double.infinity;
+    var maxY = double.negativeInfinity;
+    for (var i = 0; i < widget.dataPointBuffer.length; i++) {
+      for (var dataPoint in widget.dataPointBuffer[i]) {
+        if (dataPoint.value > maxY) {
+          maxY = dataPoint.value;
+        }
+        if (dataPoint.value < minY) {
+          minY = dataPoint.value;
+        }
+      }
+    }
+    print('auto default y $minY $maxY');
+    if (minY >= maxY) {
+      minY = widget.chartInfo.minY;
+      maxY = widget.chartInfo.maxY;
+    }
+    widget.chartInfo.curMinY = minY;
+    widget.chartInfo.curMaxY = maxY;
+  }
+
   @override
   Widget build(BuildContext context) {
-    var placehoder = Container(height: widget.height,);
-    return StreamBuilder<ChartData>(
-      stream: widget.chartDataStream,
-      builder: (context, snapshot) {
-        if (snapshot.hasData &&
-            snapshot.data.points.length ==
-                widget.chartInfo.seriesInfos.length) {
-          _addPoints(snapshot.data);
-          return RepaintBoundary(
-            child: CustomPaint(
-              painter: LineSeriesPainter(
-                  currentTime: snapshot.data.currentTime,
-                  chartInfo: widget.chartInfo,
-                  dataPointBuffer: widget.dataPointBuffer),
-              child: placehoder,
-            ),
-          );
-        } else {
-          return placehoder;
-        }
-      },
+    var placehoder = Container(
+      height: widget.height,
+    );
+    return GestureDetector(
+      onDoubleTap: _autoYAxis,
+      onLongPress: _restoreDefaultYAxis,
+      child: StreamBuilder<ChartData>(
+        stream: widget.chartDataStream,
+        builder: (context, snapshot) {
+          if (snapshot.hasData &&
+              snapshot.data.points.length ==
+                  widget.chartInfo.seriesInfos.length) {
+            _addPoints(snapshot.data);
+            return RepaintBoundary(
+              child: CustomPaint(
+                painter: LineSeriesPainter(
+                    currentTime: snapshot.data.currentTime,
+                    chartInfo: widget.chartInfo,
+                    dataPointBuffer: widget.dataPointBuffer),
+                child: placehoder,
+              ),
+            );
+          } else {
+            return placehoder;
+          }
+        },
+      ),
     );
   }
 }
